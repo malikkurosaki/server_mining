@@ -1,0 +1,137 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model CollectCount {
+  id        String   @id
+  cnt       Int?
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+  keywordId String?
+  Keyword   Keyword? @relation(fields: [keywordId], references: [id])
+
+  @@index([keywordId], map: "CollectCount_keywordId_fkey")
+}
+
+model DataContent {
+  id        String    @id
+  source    String?
+  title     String?
+  link      String?
+  date      DateTime?
+  url       String?
+  content   String?
+  category  String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime
+}
+
+model FacebookLike {
+  contentUrl  String?  @db.Text
+  name        String
+  profileUrl  String?  @db.Text
+  kotaSaatIni String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime
+  id          String
+  kotaAsal    String?
+  keywordId   String?
+  Keyword     Keyword? @relation(fields: [keywordId], references: [id])
+
+  @@id([id, name])
+  @@index([keywordId], map: "FacebookLike_keywordId_fkey")
+}
+
+model GoogleNews {
+  id        String   @id
+  title     String?  @unique
+  source    String?
+  des       String?  @db.LongText
+  link      String?  @db.LongText
+  img       String?  @db.LongText
+  waktu     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+  keywordId String?
+  Keyword   Keyword? @relation(fields: [keywordId], references: [id])
+
+  @@index([keywordId], map: "GoogleNews_keywordId_fkey")
+  @@index([title])
+  // @@index([title])
+}
+
+model Keyword {
+  id             String           @id
+  name           String?          @unique
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime
+  profileId      String?
+  idx            Int?
+  CollectCount   CollectCount[]
+  FacebookLike   FacebookLike[]
+  GoogleNews     GoogleNews[]
+  TwitterLates   TwitterLates[]
+  YoutubeContent YoutubeContent[]
+}
+
+model Lokasi {
+  latitude         String
+  longitude        String
+  formattedAddress String?
+  country          String?
+  city             String?
+  state            String?
+  zipcode          String?
+  streetName       String?
+  streetNumber     String?
+  countryCode      String?
+  neighbourhood    String?
+  provider         String?
+
+  @@id([latitude, longitude])
+}
+
+model TwitterLates {
+  userName  String
+  userUrl   String
+  contentId String
+  content   String?  @db.Text
+  location  String?
+  keywordId String?
+  Keyword   Keyword? @relation(fields: [keywordId], references: [id])
+
+  @@id([userName, contentId])
+  // @@index([content])
+  @@index([keywordId], map: "TwitterLates_keywordId_fkey")
+}
+
+model User {
+  id        String   @id
+  name      String
+  email     String
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+}
+
+model YoutubeContent {
+  id        String   @id
+  title     String?  @unique
+  source    String?
+  views     String?
+  date      String?
+  link      String?  @db.LongText
+  img       String?  @db.LongText
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+  keywordId String?
+  Keyword   Keyword? @relation(fields: [keywordId], references: [id])
+
+  @@index([keywordId], map: "YoutubeContent_keywordId_fkey")
+  @@index([title])
+}
