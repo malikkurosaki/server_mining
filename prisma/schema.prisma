@@ -1,5 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch", "fullTextIndex"]
 }
 
 datasource db {
@@ -61,8 +62,7 @@ model GoogleNews {
   Keyword   Keyword? @relation(fields: [keywordId], references: [id])
 
   @@index([keywordId], map: "GoogleNews_keywordId_fkey")
-  @@index([title])
-  // @@index([title])
+  @@fulltext([title])
 }
 
 model Keyword {
@@ -106,7 +106,6 @@ model TwitterLates {
   Keyword   Keyword? @relation(fields: [keywordId], references: [id])
 
   @@id([userName, contentId])
-  // @@index([content])
   @@index([keywordId], map: "TwitterLates_keywordId_fkey")
 }
 
@@ -133,5 +132,16 @@ model YoutubeContent {
   Keyword   Keyword? @relation(fields: [keywordId], references: [id])
 
   @@index([keywordId], map: "YoutubeContent_keywordId_fkey")
-  @@index([title])
+  @@fulltext([title])
+}
+
+model TrainAi {
+  id        String   @id @default(uuid())
+  name      String?
+  result    Json?
+  content   Json?
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+  suggest   Json?
+  iteration Int?
 }

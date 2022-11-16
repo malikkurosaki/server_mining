@@ -1,5 +1,5 @@
 import { Navbar, NavbarProps, NavLink, Text } from "@mantine/core";
-import { IconHome, IconLeaf } from '@tabler/icons'
+import { Icon123, IconHome, IconLeaf } from '@tabler/icons'
 import Link from "next/link";
 import { useRouter } from "next/router";
 
@@ -25,6 +25,12 @@ export default function LayoutNavbar({ opened }: terbuka) {
             label="Train Ai"
             onClick={() => {
                 router.push('/train-ai')
+            }} />
+        <NavLink
+            icon={<Icon123 />}
+            label="Trained Ai"
+            onClick={() => {
+                router.push('/train-ai/trained')
             }} />
     </Navbar>
 }

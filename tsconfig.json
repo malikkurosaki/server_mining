@@ -15,6 +15,6 @@
     "jsx": "preserve",
     "incremental": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "pages/api/socketio/index.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "pages/api/socketio/index.js", "pages/api/train-ai/now.js", "xcoba.js"],
   "exclude": ["node_modules"]
 }

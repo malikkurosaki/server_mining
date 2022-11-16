@@ -1,0 +1,362 @@
+{
+  "settings": {
+    "languages": [
+      "id"
+    ],
+    "forceNER": true,
+    "tag": "nlp",
+    "threshold": 0.5,
+    "autoLoad": true,
+    "autoSave": true,
+    "modelFileName": "model.nlp",
+    "calculateSentiment": true
+  },
+  "nluManager": {
+    "settings": {
+      "tag": "nlu-manager"
+    },
+    "locales": [
+      "id"
+    ],
+    "languageNames": {},
+    "domainManagers": {
+      "id": {
+        "settings": {
+          "locale": "id",
+          "trainByDomain": false,
+          "tag": "domain-manager-id",
+          "nluByDomain": {
+            "default": {
+              "className": "NeuralNlu",
+              "settings": {}
+            }
+          },
+          "useStemDict": true
+        },
+        "stemDict": {
+          "selamat,tinggal": {
+            "intent": "selamat.tinggal",
+            "domain": "default"
+          },
+          "hati,jumpa,sampa": {
+            "intent": "selamat.tinggal",
+            "domain": "default"
+          },
+          "kete,lagi,sampa": {
+            "intent": "selamat.tinggal",
+            "domain": "default"
+          },
+          "kete,sampa": {
+            "intent": "selamat.tinggal",
+            "domain": "default"
+          },
+          "harus,pergi,saya": {
+            "intent": "selamat.tinggal",
+            "domain": "default"
+          },
+          "apa,kabar": {
+            "intent": "selamat.halo",
+            "domain": "default"
+          },
+          "halo": {
+            "intent": "selamat.halo",
+            "domain": "default"
+          },
+          "bagaimana,kabar": {
+            "intent": "selamat.halo",
+            "domain": "default"
+          }
+        },
+        "intentDict": {
+          "selamat.tinggal": "default",
+          "selamat.halo": "default"
+        },
+        "sentences": [
+          {
+            "domain": "default",
+            "utterance": "selamat tinggal",
+            "intent": "selamat.tinggal"
+          },
+          {
+            "domain": "default",
+            "utterance": "sampai jumpa hati hati",
+            "intent": "selamat.tinggal"
+          },
+          {
+            "domain": "default",
+            "utterance": "sampai ketemu lagi",
+            "intent": "selamat.tinggal"
+          },
+          {
+            "domain": "default",
+            "utterance": "sampai ketemu",
+            "intent": "selamat.tinggal"
+          },
+          {
+            "domain": "default",
+            "utterance": "saya harus pergi",
+            "intent": "selamat.tinggal"
+          },
+          {
+            "domain": "default",
+            "utterance": "apa kabar",
+            "intent": "selamat.halo"
+          },
+          {
+            "domain": "default",
+            "utterance": "halo",
+            "intent": "selamat.halo"
+          },
+          {
+            "domain": "default",
+            "utterance": "bagaimana kabarnya",
+            "intent": "selamat.halo"
+          }
+        ],
+        "domains": {
+          "master_domain": {
+            "settings": {
+              "locale": "id",
+              "tag": "nlu-id",
+              "keepStopwords": true,
+              "nonefeatureValue": 1,
+              "nonedeltaMultiplier": 1.2,
+              "spellCheck": false,
+              "spellCheckDistance": 1,
+              "filterZeros": true,
+              "log": true
+            },
+            "features": {
+              "selamat": 1,
+              "tinggal": 1,
+              "sampa": 1,
+              "jumpa": 1,
+              "hati": 1,
+              "kete": 1,
+              "lagi": 1,
+              "saya": 1,
+              "harus": 1,
+              "pergi": 1,
+              "apa": 1,
+              "kabar": 1,
+              "halo": 1,
+              "bagaimana": 1
+            },
+            "intents": {
+              "selamat.tinggal": 1,
+              "selamat.halo": 1
+            },
+            "intentFeatures": {
+              "selamat.tinggal": {
+                "selamat": 1,
+                "tinggal": 1,
+                "sampa": 1,
+                "jumpa": 1,
+                "hati": 1,
+                "kete": 1,
+                "lagi": 1,
+                "saya": 1,
+                "harus": 1,
+                "pergi": 1
+              },
+              "selamat.halo": {
+                "apa": 1,
+                "kabar": 1,
+                "halo": 1,
+                "bagaimana": 1
+              }
+            },
+            "featuresToIntent": {
+              "selamat": [
+                "selamat.tinggal"
+              ],
+              "tinggal": [
+                "selamat.tinggal"
+              ],
+              "sampa": [
+                "selamat.tinggal"
+              ],
+              "jumpa": [
+                "selamat.tinggal"
+              ],
+              "hati": [
+                "selamat.tinggal"
+              ],
+              "kete": [
+                "selamat.tinggal"
+              ],
+              "lagi": [
+                "selamat.tinggal"
+              ],
+              "saya": [
+                "selamat.tinggal"
+              ],
+              "harus": [
+                "selamat.tinggal"
+              ],
+              "pergi": [
+                "selamat.tinggal"
+              ],
+              "apa": [
+                "selamat.halo"
+              ],
+              "kabar": [
+                "selamat.halo"
+              ],
+              "halo": [
+                "selamat.halo"
+              ],
+              "bagaimana": [
+                "selamat.halo"
+              ]
+            },
+            "neuralNetwork": {
+              "settings": {
+                "locale": "id",
+                "tag": "nlu-id",
+                "keepStopwords": true,
+                "nonefeatureValue": 1,
+                "nonedeltaMultiplier": 1.2,
+                "spellCheck": false,
+                "spellCheckDistance": 1,
+                "filterZeros": true,
+                "log": true
+              },
+              "features": [
+                "selamat",
+                "tinggal",
+                "sampa",
+                "jumpa",
+                "hati",
+                "kete",
+                "lagi",
+                "saya",
+                "harus",
+                "pergi",
+                "apa",
+                "kabar",
+                "halo",
+                "bagaimana"
+              ],
+              "intents": [
+                "selamat.tinggal",
+                "selamat.halo"
+              ],
+              "perceptrons": [
+                [
+                  5.150939464569092,
+                  5.150939464569092,
+                  6.085102081298828,
+                  2.124959707260132,
+                  2.124959707260132,
+                  3.9606544971466064,
+                  0.466762900352478,
+                  3.434457778930664,
+                  3.434457778930664,
+                  3.434457778930664,
+                  -1.4613441228866577,
+                  -2.790860176086426,
+                  -3.922794818878174,
+                  -1.306714653968811,
+                  3.9777173038846496
+                ],
+                [
+                  -2.317861795425415,
+                  -2.317861795425415,
+                  -2.789304494857788,
+                  -0.9445191025733948,
+                  -0.9445191025733948,
+                  -1.844434380531311,
+                  -0.6129268407821655,
+                  -1.5477948188781738,
+                  -1.5477948188781738,
+                  -1.5477948188781738,
+                  3.220076322555542,
+                  6.4272260665893555,
+                  9.531742095947266,
+                  3.2083375453948975,
+                  4.654405422959841
+                ]
+              ]
+            }
+          }
+        }
+      }
+    },
+    "intentDomains": {},
+    "extraSentences": [
+      [
+        "id",
+        "selamat tinggal"
+      ],
+      [
+        "id",
+        "sampai jumpa hati hati"
+      ],
+      [
+        "id",
+        "sampai ketemu lagi"
+      ],
+      [
+        "id",
+        "sampai ketemu"
+      ],
+      [
+        "id",
+        "saya harus pergi"
+      ],
+      [
+        "id",
+        "apa kabar"
+      ],
+      [
+        "id",
+        "halo"
+      ],
+      [
+        "id",
+        "bagaimana kabarnya"
+      ]
+    ]
+  },
+  "ner": {
+    "settings": {
+      "tag": "ner",
+      "entityPreffix": "%",
+      "entitySuffix": "%"
+    },
+    "rules": {}
+  },
+  "nlgManager": {
+    "settings": {
+      "tag": "nlg-manager"
+    },
+    "responses": {
+      "id": {
+        "selamat.tinggal": [
+          {
+            "answer": "sampai nanti"
+          },
+          {
+            "answer": "sampai ketemu"
+          }
+        ],
+        "selamat.halo": [
+          {
+            "answer": "halo yang disana"
+          },
+          {
+            "answer": "sapaan"
+          }
+        ]
+      }
+    }
+  },
+  "actionManager": {
+    "settings": {
+      "tag": "action-manager"
+    },
+    "actions": {}
+  },
+  "slotManager": {}
+}
