@@ -1,27 +1,40 @@
-const { NlpManager } = require('node-nlp');
+const brain = require('brain.js');
+const network = new brain.NeuralNetwork({hiddenLayers: [3]})
 
-const manager = new NlpManager({ languages: ['id'], forceNER: true , ner: {useDuckling: true}});
-// Adds the utterances and intents for the NLP
-manager.addDocument('id', 'selamat tinggal', 'selamat.tinggal');
-manager.addDocument('id', 'sampai jumpa hati hati', 'selamat.tinggal');
-manager.addDocument('id', 'sampai ketemu lagi', 'selamat.tinggal');
-manager.addDocument('id', 'sampai ketemu', 'selamat.tinggal');
-manager.addDocument('id', 'saya harus pergi', 'selamat.tinggal');
-manager.addDocument('id', 'apa kabar', 'selamat.halo');
-manager.addDocument('id', 'halo', 'selamat.halo');
-manager.addDocument('id', 'bagaimana kabarnya', 'selamat.halo');
+async function main(){
 
-// Train also the NLG
-manager.addAnswer('id', 'selamat.tinggal', 'sampai nanti');
-manager.addAnswer('id', 'selamat.tinggal', 'sampai ketemu');
-manager.addAnswer('id', 'selamat.halo', 'halo yang disana');
-manager.addAnswer('id', 'selamat.halo', 'sapaan');
+    const adta = await new (require('@prisma/client').PrismaClient)().googleNews.findMany({
+        orderBy: {
+            des: ""
+        }
+    })
+    // network.train([
+    //     {
+    //         "input": {bagus: 1,  jelek: 1},
+    //         "output": {positive: 1}
+    //     },
+    //     {
+    //         "input": {jelek: 1,  jelek: 1},
+    //         "output": {negative: 1}
+    //     },
+    //     {
+    //         "input": {biasa: 1,  jelek: 1},
+    //         "output": {netral: 1}
+    //     }
+    // ], {
+    //     log: true,
+    //     iterations: 1000
+    // })
+
+    // console.log(network.run({biasa: 1}))
 
 
-// Train and save the model.
-(async() => {
-    await manager.train();
-    manager.save();
-    const response = await manager.process('id', 'sepertinya saya harus pergi');
-    console.log(response.classifications);
-})();
+    let data = "nama saya adalah".split(" ")
+    let result = {}
+    for(let itm of data){
+        result[itm] = 1
+    }
+    console.log(result)
+}
+
+main()

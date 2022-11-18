@@ -17,6 +17,7 @@ export default function LayoutDefault({ children }: PropsWithChildren) {
           background: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0],
         },
       }}
+      
       navbarOffsetBreakpoint="sm"
       asideOffsetBreakpoint="sm"
       navbar={<LayoutNavbar opened={opened} />
@@ -48,6 +49,7 @@ export default function LayoutDefault({ children }: PropsWithChildren) {
         //     <Text>Application header</Text>
         //   </div>
         // </Header>
+        
       }
     >
       {children}

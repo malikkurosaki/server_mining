@@ -3,26 +3,30 @@ import moment from 'moment';
 import { NextApiRequest, NextApiResponse } from 'next';
 import uuid from 'react-uuid';
 const handler = require('express-async-handler')
+const network = new brain.NeuralNetwork({ hiddenLayers: [3] })
+const { NeuralNetwork } = require('@nlpjs/neural');
 
 
-export default handler(async (req: NextApiRequest, res: NextApiResponse) => {
+export default handler(async (req, res) => {
     if (req.method == "POST") {
         const body = JSON.parse(req.body)
 
+        // network.train(body.data, {
+        //     log: true,
+        //     iterations: Number(body.iteration)
+        // })
 
-        const network = new brain.NeuralNetwork({ hiddenLayers: [3] })
-        network.train(body.data, {
-            log: true,
-            iterations: body.iteration
-        })
+        // const dataResult = network.toJSON();
 
-        const dataResult: any = network.toJSON();
+        const net = new NeuralNetwork({ log: true, iterations: Number(body.iteration) });
+        net.train(body.data);
+
         let saveJson = await prisma?.trainAi.create({
             data: {
                 id: uuid(),
                 name: moment(Date.now()).format('YYYY-MM-DD'),
                 content: body.data,
-                result: dataResult,
+                result: net.toJSON(),
                 suggest: body.suggest,
                 iteration: body.iteration
             }

@@ -1,5 +1,4 @@
 import { MantineProvider } from '@mantine/core';
-import { useShallowEffect } from '@mantine/hooks';
 import { NotificationsProvider } from '@mantine/notifications';
 import { AppProps } from 'next/app';
 import Head from 'next/head';
@@ -8,16 +7,16 @@ import { io } from 'socket.io-client';
 
 export default function App(props: AppProps) {
   const { Component, pageProps } = props;
-  
+
   useEffect(() => {
     const socket = io({ path: '/api/socket' });
     socket.on("connect", () => {
-        console.log('socket train ai nconnected')
+      console.log('socket train ai connected')
     })
     socket.on('progress-finish', data => {
-        console.log("finish")
+      console.log("finish")
     })
-}, [])
+  }, [])
 
   return (
     <>
@@ -30,7 +29,6 @@ export default function App(props: AppProps) {
         withGlobalStyles
         withNormalizeCSS
         theme={{
-          /** Put your mantine theme override here */
           colorScheme: 'light',
         }}
       >

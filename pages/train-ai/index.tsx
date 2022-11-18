@@ -1,35 +1,18 @@
-import { ActionIcon, Alert, Box, Button, Card, Checkbox, Flex, Grid, Group, Indicator, Loader, Modal, NativeSelect, Notification, Paper, SimpleGrid, Space, Stack, Table, Text, Textarea, TextInput, Title } from "@mantine/core";
+import { ActionIcon, Box, Button, Card, Checkbox, Grid, Group, Indicator, Loader, Modal, NativeSelect, SimpleGrid, Space, Stack, Table, Text, Textarea, TextInput, Title } from "@mantine/core";
+import { useInputState } from '@mantine/hooks';
 import { showNotification } from "@mantine/notifications";
-import { IconCircleMinus, IconInfoCircle, IconTrash } from "@tabler/icons";
+import { IconCircleMinus, IconTrash } from "@tabler/icons";
+import _ from 'lodash';
 import { NextPage } from "next";
 import { useEffect, useState } from "react";
 import { BottomScrollListener } from 'react-bottom-scroll-listener';
-import store from 'store2';
+import toast, { Toaster } from 'react-hot-toast';
 import LayoutDefault from "../../components/layout/layout_default";
 import { ModelTrainAi } from '../../components/models/model';
-import io from 'socket.io-client'
-import SkeTrainAi from "../../components/layout/skeleton/ske-tain-ai";
-import { useInputState, useShallowEffect } from '@mantine/hooks'
-import _ from 'lodash'
+import { useStore } from "../../mystore";
+import { PrismaClient } from "@prisma/client";
 
-function useStore(key: string) {
-    return {
-        get() {
-            return store(key)
-        },
-        set(val: any) {
-            store(key, val)
-        },
-        has() {
-            return store.has(key)
-        },
-        isEmpty() {
-            return store(key) != undefined && store(key).length === 0
-        }
-    }
-}
-
-const listIteration = ["10", "500", "1000", "2000", "5000", "10000", "20000", "50000", "100000"]
+const listIteration = ["20000", "50000", "70000", "100000", "200000", "500000"]
 
 const TrainAi: NextPage = () => {
 
@@ -42,8 +25,8 @@ const TrainAi: NextPage = () => {
     const [trainId, setTrainId] = useState("")
     const [nameInput, setNamInput] = useInputState("")
 
-    const storeList = useStore('listSource')
-    const storeSuggest = useStore('suggest')
+    const storeList = useStore("trainai_list_store")
+    const storeSuggest = useStore("trainai_suggest")
 
     useEffect(() => {
         loadData()
@@ -52,10 +35,10 @@ const TrainAi: NextPage = () => {
 
     const loadData = () => {
         fetch('/api/train-ai').then(val => val.json()).then((val: ModelTrainAi[]) => {
-            for(let itm of val){
+            for (let itm of val) {
                 itm.title = _.lowerCase(itm.title?.replace(/[^a-zA-Z ]/g, "") as any)
             }
-            setList([...list, ...val])
+            setList([...val])
             loadSuggest(val)
         })
 
@@ -65,20 +48,14 @@ const TrainAi: NextPage = () => {
     const loadSuggest = (val: ModelTrainAi[]) => {
         if (storeSuggest.has()) {
             setlistSuggest(storeSuggest.get())
-            let ls2 = [...val]
-            for (let itm of ls2) {
-                itm.suggest = listSuggest[0]
-            }
-            setList(ls2)
         }
     }
 
 
-    if (list == undefined || list.length == 0) return <div><SkeTrainAi /></div>
+    if (list == undefined || list.length == 0) return <LayoutDefault>loading ...</LayoutDefault>
     return <div>
 
         <LayoutDefault>
-
             <Modal
                 centered
                 overflow="inside"
@@ -134,11 +111,11 @@ const TrainAi: NextPage = () => {
                     </Grid.Col>
                 </Grid>
             </Modal>
-            <Button onClick={() => {
+            {/* <Button onClick={() => {
                 setOpenModdal(true)
             }}>
                 <div>show modal</div>
-            </Button>
+            </Button> */}
             <Card>
                 <Box mb={"sm"}>
                     <Title>Create Suggest</Title>
@@ -186,17 +163,17 @@ const TrainAi: NextPage = () => {
                                 storeList.set([])
                                 loadData()
                             }}>
-                                <IconTrash />
+                                <IconTrash color="red" />
                             </ActionIcon>
                             <Text>Bersihkan </Text>
                         </Group>
                         <Group align={"end"}>
-                            <NativeSelect label="masukkan literation" data={listIteration} onChange={(val) => {
+                            <NativeSelect label="literation" description={"beraran pengulangan"} data={listIteration} onChange={(val) => {
                                 setIteration(val.target.value)
                             }} />
                             {/* tombol untuk train data yang sudah dipilih */}
                             <Indicator label={list.filter(val => val.selectted).length} size={16} color={"red"}>
-                              
+
                                 {loading ? <Loader /> : <Button
                                     disabled={list.filter(val => val.selectted).length == 0}
                                     onClick={() => {
@@ -208,10 +185,10 @@ const TrainAi: NextPage = () => {
                                         // }))
 
                                         let ls2: any[] = [];
-                                        for(let itm of list.filter(ee => ee.selectted)){
+                                        for (let itm of list.filter(ee => ee.selectted)) {
                                             let inp = itm.title?.split(' ');
-                                            let data: any  = {}
-                                            for(let ii of inp!){
+                                            let data: any = {}
+                                            for (let ii of inp!) {
                                                 data[ii] = 1
                                             }
                                             let hasil: any = {};
@@ -221,7 +198,7 @@ const TrainAi: NextPage = () => {
 
                                             ls2.push(hasil)
                                         }
-                                        
+
                                         const dataBody = {
                                             iteration: Number(itteration),
                                             suggest: listSuggest,
@@ -234,7 +211,7 @@ const TrainAi: NextPage = () => {
                                                 const data = await val.text();
                                                 setTrainId(data)
                                                 setOpenModdal(true)
-                                               
+
 
                                             } else {
                                                 showNotification({
@@ -252,12 +229,13 @@ const TrainAi: NextPage = () => {
                 </Stack>
             </Card>
 
+            <Toaster position="bottom-center"></Toaster>
             {/* scroll bottom */}
             <BottomScrollListener
                 onBottom={() => {
-
+                    toast('load data ...');
                     fetch(`/api/train-ai?p=${Math.ceil((list.length / 20))}`).then(val => val.json()).then((val: ModelTrainAi[]) => {
-                        for(let itm of val){
+                        for (let itm of val) {
                             itm.title = _.lowerCase(itm.title?.replace(/[^a-zA-Z ]/g, "") as any)
                         }
 
@@ -265,7 +243,7 @@ const TrainAi: NextPage = () => {
                         // storeList.set(list)
                     })
                 }}>
-                <Table>
+                <Table withColumnBorders>
                     <thead>
                         <tr>
                             <th>No</th>
@@ -278,27 +256,32 @@ const TrainAi: NextPage = () => {
                         {list.map(val => <tr key={val.id}>
                             <td>{list.findIndex(vl => vl.id == val.id) + 1}</td>
                             {/* <td>{val.id}</td> */}
-                            <td><Textarea value={val.title ?? ""} placeholder="" onChange={(vv) => {
-                                let list2 = [...list]
-                                list2[list2.findIndex(vv => vv.id == val.id)].title = vv.target.value
-                                setList(list2)
-                                storeList.set(list)
+                            <td><Textarea value={val.title ?? ""} onChange={(vv) => {
+                                // let list2 = [...list]
+                                // list2[list2.findIndex(vv => vv.id == val.id)].title = vv.target.value
+                                // setList(list2)
+                                // storeList.set(list)
+                                val.title = vv.target.value
+                                setList([...list])
                             }} /></td>
                             <td><NativeSelect data={listSuggest} onChange={vv => {
-                                let list2 = [...list]
-                                list2[list2.findIndex(vv => vv.id == val.id)].suggest = vv.target.value
-                                setList(list2)
+                                // let list2 = [...list]
+                                // list2[list2.findIndex(vv => vv.id == val.id)].suggest = vv.target.value
+                                // setList(list2)
+                                val.suggest = vv.target.value
+                                setList([...list])
                             }} /></td>
                             <td><Checkbox checked={val.selectted} onChange={() => {
                                 if (!val.suggest) {
                                     loadSuggest(list)
                                 }
 
-                                console.log(val.suggest)
-                                let list2 = [...list]
-                                list2[list2.findIndex(vv => vv.id == val.id)].selectted = !val.selectted
-                                setList(list2)
-                                storeList.set(list)
+                                if(!val.suggest || _.isEmpty(val.suggest)){
+                                    val.suggest = listSuggest[0]
+                                }
+
+                                val.selectted = !val?.selectted
+                                setList([...list])
 
                             }} /></td>
                         </tr>)}
