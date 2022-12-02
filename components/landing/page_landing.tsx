@@ -7,7 +7,8 @@ import { useState } from "react"
 
 const listMenu = [
     { "label": "Data Mining", "value": "data-mining"},
-    { "label": "Ai Processing", "value": "train-ai" }
+    { "label": "Ai Processing", "value": "train-ai" },
+    { "label": "Task", "value": "task" }
 ]
 
 
